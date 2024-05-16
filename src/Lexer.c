@@ -28,6 +28,7 @@ int lexer(char* inputFilePath, vector* tokens) {
 				dbglog("test for str: '%s'", str);
 				vector_append(tokens, str);
 				memset(token, 0, MAX_TOK_SIZE);
+				str = NULL;
 				index = 0;
 			}
 			else {
@@ -45,12 +46,21 @@ int lexer(char* inputFilePath, vector* tokens) {
 				str = allocateStr(token, 0);
 				vector_append(tokens, str);
 				memset(token, 0, MAX_TOK_SIZE);
+				str = NULL;
 				index = 0;
 			}
 			str = allocateStr(&ch, 1);
 			vector_append(tokens, str);
+			memset(token, 0, MAX_TOK_SIZE);
+			str = NULL;
+			index = 0;
 		}
 		ch = '\0';
+	}
+
+	if(index) {
+		str = allocateStr(token, 0);
+		vector_append(tokens, str);
 	}
 
 	fclose(inFile);

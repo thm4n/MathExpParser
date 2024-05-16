@@ -61,6 +61,7 @@ int handleFile(char* filePath) {
 			free(tokens->_array[i]);
 	}
 	vector_dtor(tokens);
-
+	free(outFilePath);
+	
 	return 0;
 }

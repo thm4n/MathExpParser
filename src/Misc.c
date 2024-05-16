@@ -67,23 +67,18 @@ int isDigit(const char ch) {
 }
 
 int isChar(const char ch) {
-	return ((ch | 32) >= 'a' && (ch | 32) <= 'z') || ch == '_';
+	return ((ch | 32) >= 'a' && (ch | 32) <= 'z');
 }
 
 int isSpec(const char ch) {
 	return (ch == '(' || ch == ')' ||
 			ch == '[' || ch == ']' ||
 			ch == '{' || ch == '}' ||
-			ch == '<' || ch == '>' ||
-			ch == '!' || ch == '#' ||
-			ch == '%' || ch == '^' ||
-			ch == '&' || ch == '*' ||
-			ch == '-' || ch == '/' ||
-			ch == '+' || ch == '=' ||
-			ch == '?' || ch == ':' ||
-			ch == '~' || ch == '"' ||
-			ch == ';' || ch == ',' ||
-			ch == '\\' || ch == '\'');
+
+			ch == '+' || ch == '-' || // add || sub
+			ch == '*' || ch == '/' || // mul || div
+			ch == '^' || ch == '_' || // pow || root
+			ch == '%' );              // mod
 }
 
 int isValidName(const char* tok) {

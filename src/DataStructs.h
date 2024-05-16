@@ -9,20 +9,32 @@ typedef enum _node_t {
 } _node_t;
 
 typedef enum _op_t {
-	_op_add,
-	_op_sub,
-	_op_mul,
-	_op_div,
-	_op_pow,
-	_op_root,
+	_op_add  = 1,
+	_op_sub  = 2,
+	_op_mul  = 3,
+	_op_div  = 4,
+	_op_pow  = 5,
+	_op_root = 6,
 } _op_t;
+
+typedef enum _tok_t {
+	_tok_val = 1,
+	_tok_op  = 2,
+} _tok_t;
+
+typedef struct Token {
+	_tok_t _type;
+	union {
+		int _value;
+		_op_t _op;
+	};
+} Token;
 
 typedef struct AST {
 	_node_t _type;
-	union {
-		int _value;
-		
-	} 
+	int _value;
+	struct AST* _lhs;
+	struct AST* _rhs;
 } AST;
 
 #endif 

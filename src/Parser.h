@@ -3,6 +3,6 @@
 
 #include "Header.h"
 
-int parser(vector* tokens);
+int preparser(vector* tokens);
 
 #endif

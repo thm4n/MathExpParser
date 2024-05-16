@@ -1,5 +1,10 @@
 #include "Parser.h"
 
-int parser(vector* tokens) {
+int preparser(vector* tokens) {
+	vector* ret;
 	
+
+	for(int i = 0; i < tokens->_length; i++) {
+		
+	}
 }
