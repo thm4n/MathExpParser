@@ -34,8 +34,9 @@ rmlogs:
 	@rm -f ./logs/*
 
 clean: rmlogs
-	@rm -rf $(shell find . -type f -name *.tok)
+	@rm -rf $(shell find . -type f -name *.o)
 	@rm -rf ./mep
+	@rm -rf $(shell find . -type f -name *.tok)
 
 mep: ${OBJ}
 	${CC} -o $@ $^ ${CC_FLAGS}

@@ -3,9 +3,9 @@
 #define MAX_TOK_SIZE 32
 
 int lexer(char* inputFilePath, vector* tokens) {
-	FILE* inFile = NULL;
 	char token[MAX_TOK_SIZE] = {0};
-	char* str = NULL;
+	Token* tok = NULL;
+	FILE* inFile = NULL;
 	int index = 0;
 	char ch = 0;
 
@@ -15,20 +15,21 @@ int lexer(char* inputFilePath, vector* tokens) {
 		return _errcode_IO;
 	}
 
-	while(!feof(inFile) && index < MAX_TOK_SIZE) {
-		if(fread(&ch, 1, 1, inFile) != 1) {
-			dbglog("fread returned != 1: ch holds value %d : '%c'", (int)ch, ch);
+	while(fread(&ch, 1, 1, inFile) == 1) {
+		if(index >= MAX_TOK_SIZE) {
+			dbglog("buffer exceeded with '%s'", token);
+			return -1;
 		}
 
 		if(isWS(ch)) {
 			dbglog("got ch: '%c'", ch);
 			if(index) {
 				dbglog("allocating str: token holds: '%s'", token);
-				str = allocateStr(token, 0);
-				dbglog("test for str: '%s'", str);
-				vector_append(tokens, str);
-				memset(token, 0, MAX_TOK_SIZE);
-				str = NULL;
+				tok = createToken(token);
+				if(!tok)
+					dbglog("null token: '%s'", token);
+				else 
+					vector_append(tokens, tok);
 				index = 0;
 			}
 			else {
@@ -43,27 +44,75 @@ int lexer(char* inputFilePath, vector* tokens) {
 			dbglog("got ch: '%c'", ch);
 			if(index) {
 				dbglog("allocating str: token holds: '%s'", token);
-				str = allocateStr(token, 0);
-				vector_append(tokens, str);
-				memset(token, 0, MAX_TOK_SIZE);
-				str = NULL;
+				tok = createToken(token);
+				if(!tok)
+					dbglog("null token: '%s'", token);
+				else 
+					vector_append(tokens, tok);
 				index = 0;
 			}
-			str = allocateStr(&ch, 1);
-			vector_append(tokens, str);
-			memset(token, 0, MAX_TOK_SIZE);
-			str = NULL;
+			token[index++] = ch;
+			tok = createToken(token);
+			if(!tok)
+				dbglog("null token: '%s'", token);
+			else 
+				vector_append(tokens, tok);
 			index = 0;
 		}
 		ch = '\0';
 	}
 
 	if(index) {
-		str = allocateStr(token, 0);
-		vector_append(tokens, str);
+		tok = createToken(token);
+		if(!tok)
+			dbglog("null token: '%s'", token);
+		else 
+			vector_append(tokens, tok);
 	}
 
 	fclose(inFile);
 
 	return _errcode_clean;
+}
+
+Token* createToken(char* token) {
+	if(!token || token[0] == '\0') {
+		dbglog("recieved empty token");
+		return NULL;
+	}
+
+	_tok_t type = 0;
+	int value = 0;
+	_op_t op = 0;
+	
+	op = isOp(token);
+	dbglog("on '%s' got op: %d", token, op);
+	if(op != _op_non) {
+		type = _tok_op;
+	}		
+	else if((value = isConst(token, &value) != -1)) {
+		dbglog("value: %d", value);
+		type = _tok_const;
+	}
+	else {
+		dbglog("unknown token type: '%s'", token);
+		return NULL;
+	}
+
+	Token* tok = (Token*)malloc(sizeof(Token));
+	if(!tok)
+		exitWithError(_errcode_mem_err, ERRCODE_MEM_MSG);
+	
+	tok->_type = type;
+	if(type == _tok_op)
+		tok->_op = op;
+	else
+		tok->_value = value;
+
+	memset(token, 0, MAX_TOK_SIZE);
+
+	// dbglog(" >> {op: %d, type: %d, value: %d}\n", tok->_op, tok->_type, tok->_value);
+	// dbglog(" >> {op: %d, type: %d, value: %d}\n", op, type, value);
+
+	return tok;
 }

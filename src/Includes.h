@@ -11,6 +11,8 @@
 #include <string.h>
 
 //local
+#include "DataStructs.h"
+
 #include "Misc.h"
 #include "Lexer.h"
 

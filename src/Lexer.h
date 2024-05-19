@@ -5,4 +5,6 @@
 
 int lexer(char* inputFilePath, vector* tokens);
 
+Token* createToken(char* token);
+
 #endif

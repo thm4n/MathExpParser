@@ -81,6 +81,42 @@ int isSpec(const char ch) {
 			ch == '%' );              // mod
 }
 
+_op_t isOp(const char* tok) {
+	if(!tok)
+		return _op_non;
+	
+	switch(tok[0]) {
+	case '+':
+		return _op_add;
+	case '-':
+		return _op_sub;
+	case '*':
+		return _op_mul;
+	case '/':
+		return _op_div;
+	case '^':
+		return _op_pow;
+	case '_':
+		return _op_root;
+	case '%':
+		return _op_mod;
+	}
+
+	return _op_non;
+}
+
+int isConst(const char* tok, int* value) {
+	if(!tok || !value) 
+		return -1;
+
+	char* end;
+	*value = strtol(tok, &end, 10);
+	if(*end) 
+		return -1;
+
+	return 0;
+}
+
 int isValidName(const char* tok) {
 	int len = 0;
 

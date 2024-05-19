@@ -12,6 +12,9 @@ int isDigit(const char ch);
 int isChar(const char ch);
 int isSpec(const char ch);
 
+_op_t isOp(const char* tok);
+int isConst(const char* tok, int* value);
+
 int isValidName(const char* tok);
 
 char* allocateStr(const char* str, int size);

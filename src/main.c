@@ -24,6 +24,7 @@ int main(int argc, char** argv) {
 
 int handleFile(char* filePath) {
 	vector* tokens = vector_ctor();
+	Token* tok = NULL;
 	char* outFilePath = NULL;
 	FILE* outFile = NULL;
 	int res = 0;
@@ -46,20 +47,21 @@ int handleFile(char* filePath) {
 	}
 
 	for(int i = 0; i < tokens->_length; i++) {
-		fprintf(outFile, "%s\n", (char*)tokens->_array[i]);
+		tok = tokens->_array[i];
+		fprintf(outFile, "type: %d, value: %d\n", tok->_type, tok->_value);
 	}
 
 	fclose(outFile);
 
-	// inflog("Starting 2nd stage:");
-	// inflog("Finished 2nd stage successfully");
+	inflog("Starting 2nd stage:");
 
-	printf("------- %s -------\n", filePath);
-	for(int i = 0; i < tokens->_length; i++) {
-		printf("tok[%d]: '%s'\n", i + 1, (char*)tokens->_array[i]);
+
+
+	inflog("Finished 2nd stage successfully");
+
+	for(int i = 0; i < tokens->_length; i++)
 		if(tokens->_array[i])
 			free(tokens->_array[i]);
-	}
 	vector_dtor(tokens);
 	free(outFilePath);
 	
